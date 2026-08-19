@@ -32,8 +32,17 @@ Reimplementing Project 5's manual RNA-seq pipeline (FastQC → fastp → HISAT2 
 - Confirmed a 3-rule chain now works end-to-end: raw fastq -> trimmed fastq -> aligned SAM, all driven by one `snakemake --cores 1` command
 - Real alignment stats confirmed pipeline correctness (99.95% overall alignment rate on test sample)
 
-## Next (Day 5)
-- Add samtools sort/index rules, converting SAM to sorted, indexed BAM
+## Status: Day 5 complete
+
+- Added `samtools_sort` rule: converts each sample's SAM into a sorted BAM
+- Added `samtools_index` rule: creates the `.bai` index alongside the sorted BAM
+- Wrote both rules independently (samtools commands already known from Project 5), correctly using colons after rule names and quoted shell strings
+- Confirmed automatic multi-step chaining: requesting only the final `.bai` file triggered both `samtools_sort` and `samtools_index` to run in the correct order
+- Full pipeline (5 rules deep) now runs end-to-end for all 6 samples with one command
+
+## Next (Day 6)
+- Add the featureCounts rule — a many-to-one step: all 6 BAM files in, one single count matrix out
+
 
 
 

@@ -6,7 +6,8 @@ rule all:
         expand("results/fastqc/{sample}_Build37-ErccTranscripts-chr22.{read}_fastqc.html", sample=SAMPLES, read=READS),
         expand("results/trimmed/{sample}_read1.trimmed.fastq.gz", sample=SAMPLES),
         expand("results/trimmed/{sample}_read2.trimmed.fastq.gz", sample=SAMPLES),
-        expand("results/aligned/{sample}.sam", sample=SAMPLES)
+        expand("results/aligned/{sample}.sam", sample=SAMPLES),
+        expand("results/aligned/{sample}.sorted.bam.bai", sample=SAMPLES)
 rule fastqc_raw:
     input:
         "raw_data/{sample}_Build37-ErccTranscripts-chr22.{read}.fastq.gz"
@@ -35,3 +36,19 @@ rule hisat2_align:
         index = "/Users/ananyakannan/bioinformatics-projects/project5_rnaseq/genome/chr22_index"
     shell:
         "hisat2 -x {params.index} -1 {input.r1} -2 {input.r2} -S {output}"
+
+rule samtools_sort:
+    input:
+        "results/aligned/{sample}.sam"
+    output: 
+        "results/aligned/{sample}.sorted.bam"
+    shell:
+        "samtools sort {input} -o {output}"
+
+rule samtools_index:
+    input:
+        "results/aligned/{sample}.sorted.bam"
+    output:
+        "results/aligned/{sample}.sorted.bam.bai"
+    shell:
+        "samtools index {input}"
