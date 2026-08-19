@@ -5,7 +5,8 @@ rule all:
     input:
         expand("results/fastqc/{sample}_Build37-ErccTranscripts-chr22.{read}_fastqc.html", sample=SAMPLES, read=READS),
         expand("results/trimmed/{sample}_read1.trimmed.fastq.gz", sample=SAMPLES),
-        expand("results/trimmed/{sample}_read2.trimmed.fastq.gz", sample=SAMPLES)
+        expand("results/trimmed/{sample}_read2.trimmed.fastq.gz", sample=SAMPLES),
+        expand("results/aligned/{sample}.sam", sample=SAMPLES)
 rule fastqc_raw:
     input:
         "raw_data/{sample}_Build37-ErccTranscripts-chr22.{read}.fastq.gz"
@@ -23,3 +24,14 @@ rule fastp_trim:
         r2 = "results/trimmed/{sample}_read2.trimmed.fastq.gz"
     shell:  
         "fastp -i {input.r1} -I {input.r2} -o {output.r1} -O {output.r2}"
+
+rule hisat2_align:
+    input:
+        r1 = "results/trimmed/{sample}_read1.trimmed.fastq.gz",
+        r2 = "results/trimmed/{sample}_read2.trimmed.fastq.gz"
+    output:
+        "results/aligned/{sample}.sam"
+    params:
+        index = "/Users/ananyakannan/bioinformatics-projects/project5_rnaseq/genome/chr22_index"
+    shell:
+        "hisat2 -x {params.index} -1 {input.r1} -2 {input.r2} -S {output}"

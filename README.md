@@ -25,7 +25,15 @@ Reimplementing Project 5's manual RNA-seq pipeline (FastQC → fastp → HISAT2 
 - Extended `rule all` to request trimmed outputs for all 6 samples via `expand()`
 - Ran full pipeline (FastQC + fastp) for all 6 samples with one command: `snakemake --cores 1`
 
-## Next (Day 4)
-- Add the HISAT2 alignment rule, taking trimmed fastq as input and producing a BAM file
+## Status: Day 4 complete
+
+- Added `hisat2_align` rule: chains onto `fastp_trim`'s output (trimmed R1/R2), aligns against the chr22 HISAT2 index, produces a `.sam` file per sample
+- Learned: `params:` section — for values a rule needs (like a shared reference index prefix) that aren't tracked files themselves, referenced in `shell:` via `{params.name}`
+- Confirmed a 3-rule chain now works end-to-end: raw fastq -> trimmed fastq -> aligned SAM, all driven by one `snakemake --cores 1` command
+- Real alignment stats confirmed pipeline correctness (99.95% overall alignment rate on test sample)
+
+## Next (Day 5)
+- Add samtools sort/index rules, converting SAM to sorted, indexed BAM
+
 
 
