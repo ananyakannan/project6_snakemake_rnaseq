@@ -7,7 +7,8 @@ rule all:
         expand("results/trimmed/{sample}_read1.trimmed.fastq.gz", sample=SAMPLES),
         expand("results/trimmed/{sample}_read2.trimmed.fastq.gz", sample=SAMPLES),
         expand("results/aligned/{sample}.sam", sample=SAMPLES),
-        expand("results/aligned/{sample}.sorted.bam.bai", sample=SAMPLES)
+        expand("results/aligned/{sample}.sorted.bam.bai", sample=SAMPLES),
+        "results/counts/gene_counts.txt"
 rule fastqc_raw:
     input:
         "raw_data/{sample}_Build37-ErccTranscripts-chr22.{read}.fastq.gz"
@@ -52,3 +53,12 @@ rule samtools_index:
         "results/aligned/{sample}.sorted.bam.bai"
     shell:
         "samtools index {input}"
+rule feature_counts:
+    input:
+        expand("results/aligned/{sample}.sorted.bam", sample=SAMPLES)
+    output:
+        "results/counts/gene_counts.txt"
+    params:
+        gtf = "/Users/ananyakannan/bioinformatics-projects/project5_rnaseq/genome/chr22_with_ERCC92.gtf"
+    shell:
+        "featureCounts -p -a {params.gtf} -o {output} {input}"

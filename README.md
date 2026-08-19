@@ -40,8 +40,16 @@ Reimplementing Project 5's manual RNA-seq pipeline (FastQC → fastp → HISAT2 
 - Confirmed automatic multi-step chaining: requesting only the final `.bai` file triggered both `samtools_sort` and `samtools_index` to run in the correct order
 - Full pipeline (5 rules deep) now runs end-to-end for all 6 samples with one command
 
-## Next (Day 6)
-- Add the featureCounts rule — a many-to-one step: all 6 BAM files in, one single count matrix out
+## Status: Day 6 complete
+
+- Added `feature_counts` rule — the first many-to-one rule in the pipeline: input is all 6 sorted BAMs (via `expand()`), output is one single count matrix, no per-sample wildcard in the output
+- Learned: how a rule's shape changes when going from one-to-one to many-to-one — `expand()` inside `input:` produces a full file list, and `output:`/`shell:` operate on that whole set in a single execution rather than per-sample
+- Confirmed via the job log that featureCounts ran exactly once (not once per sample), using all 6 BAMs together
+- Verified output: gene x sample count matrix (`gene_counts.txt`) and sanity-checked assignment stats in `gene_counts.txt.summary` across all 6 samples
+
+## Next (Day 7)
+- Add `rule all` cleanup, visualize the DAG, and introduce config.yaml to move sample names/paths out of the Snakefile
+
 
 
 
