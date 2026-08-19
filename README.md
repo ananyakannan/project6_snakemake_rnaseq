@@ -17,6 +17,15 @@ Reimplementing Project 5's manual RNA-seq pipeline (FastQC → fastp → HISAT2 
 - Learned: wildcards, multi-wildcard rules, `rule all` as the default target, and `expand()` for generating file lists
 - Confirmed Snakemake's smart rerun behavior: already-completed outputs were skipped automatically
 
-## Next (Day 3)
-- Add the fastp rule (trimming), chaining its input to the raw fastq files and producing two paired outputs (R1/R2 trimmed)
+## Status: Day 3 complete
+
+- Added `fastp_trim` rule: takes paired R1/R2 raw fastq as two named inputs, produces two named trimmed outputs in one command
+- Learned: multi-input/multi-output rules using named entries (`r1 =`, `r2 =`), and that Python's comma-between-items syntax applies inside `input:`/`output:` blocks
+- Learned: `rule all` has no `output`/`shell` — it's a wishlist of final targets that Snakemake works backward from
+- Extended `rule all` to request trimmed outputs for all 6 samples via `expand()`
+- Ran full pipeline (FastQC + fastp) for all 6 samples with one command: `snakemake --cores 1`
+
+## Next (Day 4)
+- Add the HISAT2 alignment rule, taking trimmed fastq as input and producing a BAM file
+
 
