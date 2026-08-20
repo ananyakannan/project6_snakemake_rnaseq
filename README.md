@@ -47,9 +47,15 @@ Reimplementing Project 5's manual RNA-seq pipeline (FastQC → fastp → HISAT2 
 - Confirmed via the job log that featureCounts ran exactly once (not once per sample), using all 6 BAMs together
 - Verified output: gene x sample count matrix (`gene_counts.txt`) and sanity-checked assignment stats in `gene_counts.txt.summary` across all 6 samples
 
-## Next (Day 7)
-- Add `rule all` cleanup, visualize the DAG, and introduce config.yaml to move sample names/paths out of the Snakefile
+## Status: Day 7 complete
 
+- Generated and reviewed the pipeline DAG (`dag.png`) — visual confirmation of all 6 rules and how they chain together, including the many-to-one fan-in at `feature_counts`
+- Moved `SAMPLES`, `READS`, and reference file paths (HISAT2 index, GTF) out of the Snakefile into a new `config.yaml`
+- Learned: `configfile:` directive loads a YAML file into a `config` dictionary, keeping pipeline logic (Snakefile) separate from pipeline data (sample names, paths)
+- Verified refactor correctness: rerunning the full pipeline after the config change reported "Nothing to be done," confirming no filenames changed unexpectedly
+
+## Next (Day 8)
+- Full end-to-end run from scratch, test Snakemake's rerun behavior by modifying one input file, final wrap-up
 
 
 

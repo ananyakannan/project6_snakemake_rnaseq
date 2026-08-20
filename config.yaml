@@ -1,0 +1,12 @@
+samples:
+  - HBR_Rep1_ERCC-Mix2
+  - HBR_Rep2_ERCC-Mix2
+  - HBR_Rep3_ERCC-Mix2
+  - UHR_Rep1_ERCC-Mix1
+  - UHR_Rep2_ERCC-Mix1
+  - UHR_Rep3_ERCC-Mix1
+reads:
+  - read1
+  - read2
+hisat2_index: "/Users/ananyakannan/bioinformatics-projects/project5_rnaseq/genome/chr22_index"
+gtf: "Users/ananyakannan/bioinformatics-projects/project5_rnaseq/genome/chr22_with_ERCC92.gtf"

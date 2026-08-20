@@ -1,6 +1,6 @@
-SAMPLES = ["HBR_Rep1_ERCC-Mix2", "HBR_Rep2_ERCC-Mix2", "HBR_Rep3_ERCC-Mix2",
-           "UHR_Rep1_ERCC-Mix1", "UHR_Rep2_ERCC-Mix1", "UHR_Rep3_ERCC-Mix1"]
-READS = ["read1", "read2"]
+configfile: "config.yaml"
+SAMPLES = config["samples"]
+READS = config["reads"]
 rule all:
     input:
         expand("results/fastqc/{sample}_Build37-ErccTranscripts-chr22.{read}_fastqc.html", sample=SAMPLES, read=READS),
@@ -34,7 +34,7 @@ rule hisat2_align:
     output:
         "results/aligned/{sample}.sam"
     params:
-        index = "/Users/ananyakannan/bioinformatics-projects/project5_rnaseq/genome/chr22_index"
+        index = config["hisat2_index"]
     shell:
         "hisat2 -x {params.index} -1 {input.r1} -2 {input.r2} -S {output}"
 
@@ -59,6 +59,6 @@ rule feature_counts:
     output:
         "results/counts/gene_counts.txt"
     params:
-        gtf = "/Users/ananyakannan/bioinformatics-projects/project5_rnaseq/genome/chr22_with_ERCC92.gtf"
+        gtf = config["gtf"]
     shell:
         "featureCounts -p -a {params.gtf} -o {output} {input}"
