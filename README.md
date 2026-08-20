@@ -54,8 +54,21 @@ Reimplementing Project 5's manual RNA-seq pipeline (FastQC → fastp → HISAT2 
 - Learned: `configfile:` directive loads a YAML file into a `config` dictionary, keeping pipeline logic (Snakefile) separate from pipeline data (sample names, paths)
 - Verified refactor correctness: rerunning the full pipeline after the config change reported "Nothing to be done," confirming no filenames changed unexpectedly
 
-## Next (Day 8)
-- Full end-to-end run from scratch, test Snakemake's rerun behavior by modifying one input file, final wrap-up
+## Status: Day 8 complete — Project finished
+
+- Verified Snakemake's core promise: touched one sample's raw fastq file and confirmed via `--dry-run` that only that sample's chain (fastqc_raw -> fastp_trim -> hisat2_align -> samtools_sort -> samtools_index) was marked for rerun, while the other 5 samples' completed work was correctly left untouched
+- Noted an important exception: `feature_counts`, a many-to-one rule, reruns in full even when only one of its six inputs changes, since its single output can't be partially rebuilt
+
+## Project summary
+
+A fully automated, 6-rule Snakemake pipeline reimplementing Project 5's manual RNA-seq workflow:
+
+FastQC (raw QC) -> fastp (trimming) -> HISAT2 (alignment) -> samtools sort/index -> featureCounts (gene x sample count matrix)
+
+Runs end-to-end for all 6 samples (3 HBR, 3 UHR, chr22-only) with a single command: `snakemake --cores 1`
+
+Key Snakemake concepts learned: rules (input/output/shell), wildcards, `expand()`, `rule all` as the default target, multi-input/multi-output rules, `params` for non-file values, many-to-one rules, the DAG, and `config.yaml` for separating pipeline logic from pipeline data.
+
 
 
 
